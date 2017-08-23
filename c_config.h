@@ -6,8 +6,8 @@
 #define SCALE_MIN 5
 #define HR_APP_PATH       "D:/HR2D/"
 #define HR_DATA_REC_PATH  "D:/HR2D/RecordData/"
-#define HR_CONFIG_FILE    "C:/FlameRun/map_config.xml"
-#define HR_CONFIG_FILE_DF "C:/FlameRun/map_config_default.xml"
+#define HR_CONFIG_FILE    "C:/Qt/map_config.xml"
+#define HR_CONFIG_FILE_DF "C:/Qt/map_config_default.xml"
 #define XML_ELEM_NAME     "map_config"
 #define DEFAULT_LAT		20.707f
 #define DEFAULT_LONG	106.78f

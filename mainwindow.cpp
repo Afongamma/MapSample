@@ -6,7 +6,7 @@
 #include <QUdpSocket>
 QString mPath;
 CConfig *mConfig= new CConfig;
-QList<CCamera*> cameraList;
+//QList<CCamera*> cameraList;
 QTimer *pUpdateTimer;
 QUdpSocket *udpSocket;
 MainWindow::MainWindow(QWidget *parent) :dxMap(0),dyMap(0),
@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :dxMap(0),dyMap(0),
 {
     //init UI elements
     ui->setupUi(this);
-    ui->frame->setHidden(true);
+    //ui->frame->setHidden(true);
     this->setGeometry(100,100,1024,768);
     //Load initial setting from config file
     LoadSettings();
@@ -25,19 +25,15 @@ MainWindow::MainWindow(QWidget *parent) :dxMap(0),dyMap(0),
     map->setPath(mPath);
     pUpdateTimer = new QTimer();
     connect(pUpdateTimer, SIGNAL(timeout()), this, SLOT(updateCameras()));
-    pUpdateTimer->start(1000);
+    //pUpdateTimer->start(1000);
     isPressed = false;
-    initCameras();
+    //initCameras();
 
 }
 void MainWindow::updateCameras()
 {
 
-    foreach (CCamera *cam, cameraList)
-    {
-        cam->requestAzi();
-        update();
-    }
+
 
 }
 int MainWindow::lon2x(double lon)
@@ -52,34 +48,12 @@ int MainWindow::lat2y(double lat)
 
 void MainWindow::initCameras()
 {
-    CCamera *cam1 = new CCamera();
-    cam1->setCamName("Camera 1");
-    cam1->setIP("192.168.100.100");
-    cam1->setAziNorth(mConfig->getDouble("AziNorth1",0));
-    cam1->setLat(21.111230);
-    cam1->setLon(105.322770);
-    cameraList.push_back(cam1);
-    CCamera *cam2 = new CCamera();
-    cam2->setCamName("Camera 2");
-    cam2->setIP("192.168.100.101");
-    cam2->setAziNorth(mConfig->getDouble("AziNorth2",0));
-    cam2->setLat(21.125846);
-    cam2->setLon(105.322995);
-    cameraList.push_back(cam2);
-    CCamera *cam3 = new CCamera();
-    cam3->setCamName("Camera 3");
-    cam3->setIP("192.168.100.102");
-    cam3->setAziNorth(mConfig->getDouble("AziNorth3",0));
-
-    cam3->setLat(21.107606);
-    cam3->setLon(105.330944);
-    cameraList.push_back(cam3);
 
 }
 void MainWindow::LoadSettings()
 {
     mScale = mConfig->getDouble("mScale",500);
-    mPath = mConfig->getString("mPath","C:/Mapdata/");
+    mPath = mConfig->getString("mPath","C:\\downloads\\my_new_task\\");
     mLat = mConfig->getDouble("mLat",21.046595);
     mLon = mConfig->getDouble("mLon",105.783860);
 }
@@ -90,7 +64,7 @@ MainWindow::~MainWindow()
 }
 void MainWindow::drawMap(QPainter *p)
 {
-    ui->label_scale->setText("OSM scale factor:" + QString::number(map->getScaleRatio()));
+    //ui->label_scale->setText("OSM scale factor:" + QString::number(map->getScaleRatio()));
     QPixmap pix = map->getImage(mScale);
     p->drawPixmap((width()/2.0-pix.width()/2.0)+dxMap,
                  (height()/2.0-pix.height()/2.0)+dyMap,
@@ -133,16 +107,7 @@ void MainWindow::drawMap(QPainter *p)
 }
 void MainWindow::drawCameras(QPainter *p)
 {
-    foreach (CCamera *cam, cameraList) {
-        int cameraX = lon2x(cam->lon());
-        int cameraY = lat2y(cam->lat());
-        if(cam->alarm())p->setPen(QPen(Qt::red,3));
-            else p->setPen(QPen(Qt::yellow,2));
-        p->drawEllipse(cameraX-5,cameraY-5,10,10);
-        p->drawText(cameraX-5,cameraY+15,100,100,0,cam->camName());
-        int range = 0.2*mScale;
-        p->drawLine(cameraX,cameraY,cameraX+range*cos(cam->azi()),cameraY-range*sin(cam->azi()));
-    }
+
 }
 void MainWindow::initSocket()
 {
@@ -164,19 +129,7 @@ void MainWindow::readPendingDatagrams()
 }
 void MainWindow::processUdpData(QByteArray buffer)
 {
-    QString str = QString::fromLatin1(buffer.data());
-    QStringList strList = str.split(';');
-    if(strList.size()>2)
-    {
-        if(strList.at(0)=="alarm")
-        {
-            int camIndex = strList.at(2).toInt();
-            bool status  = strList.at(3).toInt();
-            Q_ASSERT(camIndex>0);
-            Q_ASSERT(camIndex<4);
-            cameraList.at(camIndex)->setAlarm(status);
-        }
-    }
+
 }
 void MainWindow::paintEvent(QPaintEvent * e)
 {
@@ -239,8 +192,8 @@ void MainWindow::mouseMoveEvent(QMouseEvent *e)
         short   y = this->mapFromGlobal(QCursor::pos()).y() - height()/2;
         double lat,lon;
         map->ConvKmToWGS(x/mScale,-y/mScale,&lon,&lat);
-        ui->lineEdit_cursor_lat->setText(QString::number(lat));
-        ui->lineEdit_cursor_lon->setText(QString::number(lon));
+        //ui->lineEdit_cursor_lat->setText(QString::number(lat));
+        //ui->lineEdit_cursor_lon->setText(QString::number(lon));
     }
 }
 
@@ -262,8 +215,8 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *e)
 
     map->ConvKmToWGS(-(double)dxMap/mScale,(double)dyMap/mScale,&mLon,&mLat);
     map->setCenterPos(mLat,mLon);
-    ui->lineEdit_lat->setText(QString::number(mLat,'g',10));
-    ui->lineEdit_lon->setText(QString::number(mLon,'g',10));
+    //ui->lineEdit_lat->setText(QString::number(mLat,'g',10));
+    //ui->lineEdit_lon->setText(QString::number(mLon,'g',10));
     dxMap = 0;
     dyMap = 0;
     update();
@@ -272,7 +225,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent *e)
 
 void MainWindow::on_lineEdit_returnPressed()
 {
-    map->setPath(ui->lineEdit->text());
+    //map->setPath(ui->lineEdit->text());
     update();
 }
 void MainWindow::wheelEvent(QWheelEvent* event)
@@ -283,4 +236,10 @@ void MainWindow::wheelEvent(QWheelEvent* event)
     if(mScale<1)mScale = 1;
     update();
     repaint();
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    map->setCenterPos(21.046595, 105.783860);
+    update();
 }

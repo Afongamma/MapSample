@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include "cmap.h"
 #include "c_config.h"
-#include "c_camera.h"
+
 namespace Ui {
 class MainWindow;
 }
@@ -32,6 +32,8 @@ private slots:
     void on_lineEdit_returnPressed();
     void readPendingDatagrams();
     void updateCameras();
+    void on_pushButton_clicked();
+
 private:
 
     double mLat,mLon;

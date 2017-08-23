@@ -18,12 +18,10 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     cmap.cpp \
-    c_config.cpp \
-    c_camera.cpp
+    c_config.cpp
 
 HEADERS  += mainwindow.h \
     cmap.h \
-    c_config.h \
-    c_camera.h
+    c_config.h
 
 FORMS    += mainwindow.ui
